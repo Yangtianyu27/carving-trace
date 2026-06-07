@@ -1,0 +1,33 @@
+name: Deploy Vite site to GitHub Pages
+
+on:
+  # 当你推送到 main 分支时触发
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ⚙️
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # 使用 Node 18
+
+      - name: Install dependencies 📦
+        run: npm install
+        working-directory: vite-project # 重点：告诉它在 vite-project 里安装依赖
+
+      - name: Build project 🔧
+        run: npm run build
+        working-directory: vite-project # 重点：在 vite-project 里打包
+
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: vite-project/dist # 重点：发布打包生成的 dist 文件夹
